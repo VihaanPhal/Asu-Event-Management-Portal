@@ -5,32 +5,98 @@ const cors = require("cors");
 const app = express();
 const port = 3001;
 
-// cors Middleware
-app.use(cors());
+// Middleware
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
 
 // Database connection
 const pool = new Pool({
   user: "vihaanphal",
   host: "localhost",
   database: "event_management",
-  password: "Password",
   port: "5432",
 });
 
+// Connection error handling
+pool.on("connect", () => {
+  console.log("Database connected successfully");
+});
+
+pool.on("error", (err) => {
+  console.error("Database error:", err);
+});
+
+// Test route
+app.get("/test", (req, res) => {
+  res.json({ message: "Server is running" });
+});
+// Add this after your other endpoints
+app.post("/api/events", async (req, res) => {
+  try {
+    const { name, location, date, description, departmentId } = req.body;
+
+    const result = await pool.query(
+      `INSERT INTO Event (Name, Location, Date, Description, DepartmentID) 
+       VALUES ($1, $2, $3, $4, $5) 
+       RETURNING *`,
+      [name, location, date, description, departmentId]
+    );
+
+    res.status(201).json({
+      message: "Event created successfully",
+      event: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Error creating event:", err);
+    res.status(500).json({
+      error: "Error creating event",
+      details: err.message,
+    });
+  }
+});
+// delete events by ID
+app.delete("/api/events/:id", async (req, res) => {
+  try {
+    const eventId = req.params.id;
+
+    // First, delete related records in Registration and Feedback tables
+    await pool.query("DELETE FROM Registration WHERE eventid = $1", [eventId]);
+    await pool.query("DELETE FROM Feedback WHERE eventid = $1", [eventId]);
+
+    // Then delete the event
+    const result = await pool.query("DELETE FROM Event WHERE eventid = $1", [
+      eventId,
+    ]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    res.json({ message: "Event deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting event:", err);
+    res.status(500).json({
+      error: "Error deleting event",
+      details: err.message,
+    });
+  }
+});
 // Get all events
 app.get("/api/events", async (req, res) => {
   try {
     console.log("Attempting to fetch events...");
     const result = await pool.query(`
-        SELECT e.*, 
-               d.name as department_name,
-               (SELECT COUNT(*) FROM registration r WHERE r.eventid = e.eventid) as registration_count
-        FROM event e 
-        LEFT JOIN department d ON e.departmentid = d.departmentid 
-        ORDER BY e.eventid
-      `);
+       SELECT e.*, 
+              d.name as department_name,
+              (SELECT COUNT(*) FROM registration r WHERE r.eventid = e.eventid) as registration_count
+       FROM event e 
+       LEFT JOIN department d ON e.departmentid = d.departmentid 
+       ORDER BY e.eventid
+   `);
     console.log("Query executed successfully. Row count:", result.rows.length);
     res.json(result.rows);
   } catch (err) {
@@ -93,6 +159,63 @@ app.post("/api/store-user", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error storing user", error: error.message });
+  }
+});
+
+app.get("/api/events/:eventId/registrations", async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const result = await pool.query(
+      `
+      SELECT r.registrationid, r.date as registration_date, 
+             u.userid, u.name as user_name, u.usertype
+      FROM Registration r
+      JOIN "User" u ON r.userid = u.userid
+      WHERE r.eventid = $1
+      ORDER BY r.date DESC
+    `,
+      [eventId]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching registrations:", err);
+    res.status(500).json({
+      error: "Error fetching registrations",
+      details: err.message,
+    });
+  }
+});
+
+// Register for an event
+app.post("/api/events/:eventId/register", async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const { userId } = req.body;
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    // Register the user
+    await pool.query(
+      "INSERT INTO Registration (eventid, userid, date) VALUES ($1, $2, $3)",
+      [eventId, userId, currentDate]
+    );
+
+    // Get updated registration count
+    const countResult = await pool.query(
+      "SELECT COUNT(*) FROM Registration WHERE eventid = $1",
+      [eventId]
+    );
+
+    res.status(201).json({
+      message: "Successfully registered",
+      registrationCount: parseInt(countResult.rows[0].count),
+    });
+  } catch (err) {
+    console.error("Error registering:", err);
+    res.status(500).json({
+      error: "Error registering",
+      details: err.message,
+    });
   }
 });
 
