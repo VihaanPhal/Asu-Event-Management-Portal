@@ -105,46 +105,50 @@ export default function EventCard({
 
   return (
     <>
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">{name}</h2>
-              <span className="inline-block px-2 py-1 text-sm bg-gray-100 text-gray-800 rounded-full mt-1">
+      <div className="w-full bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+        <div className="p-3 sm:p-4 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+            <div className="space-y-1">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 break-words">
+                {name}
+              </h2>
+              <span className="inline-block px-2 py-1 text-xs sm:text-sm bg-gray-100 text-gray-800 rounded-full">
                 {department}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <div className="space-y-2">
-            <div className="flex items-center text-sm text-gray-500">
-              <Calendar className="mr-2 h-4 w-4" />
-              {new Date(date).toLocaleDateString()}
+            <div className="flex items-center text-xs sm:text-sm text-gray-500">
+              <Calendar className="mr-2 h-4 w-4 flex-shrink-0" />
+              <span className="break-words">
+                {new Date(date).toLocaleDateString()}
+              </span>
             </div>
-            <div className="flex items-center text-sm text-gray-500">
-              <MapPin className="mr-2 h-4 w-4" />
-              {location}
+            <div className="flex items-center text-xs sm:text-sm text-gray-500">
+              <MapPin className="mr-2 h-4 w-4 flex-shrink-0" />
+              <span className="break-words">{location}</span>
             </div>
             <div
-              className="flex items-center text-sm text-gray-500 cursor-pointer hover:text-blue-500"
+              className="flex items-center text-xs sm:text-sm text-gray-500 cursor-pointer hover:text-blue-500"
               onClick={handleShowRegistrations}
             >
-              <Users className="mr-2 h-4 w-4" />
-              {registrationCount} registered
+              <Users className="mr-2 h-4 w-4 flex-shrink-0" />
+              <span>{registrationCount} registered</span>
             </div>
-            <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 line-clamp-2 break-words">
               {description}
             </p>
           </div>
         </div>
 
-        <div className="p-4 border-t border-gray-200 flex justify-between items-center">
+        <div className="p-3 sm:p-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between sm:items-center">
           <button
             onClick={handleRegister}
             disabled={isRegistering || isRegistered}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors
+            className={`w-full sm:w-auto px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors
               ${
                 isRegistered
                   ? "bg-gray-100 text-gray-800"
@@ -159,8 +163,11 @@ export default function EventCard({
               : "Register"}
           </button>
 
-          <Link href={`/dashboard/events/${eventId}`}>
-            <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center">
+          <Link
+            href={`/dashboard/events/${eventId}`}
+            className="w-full sm:w-auto"
+          >
+            <button className="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center sm:justify-start">
               View Details
               <ChevronRight className="ml-2 h-4 w-4" />
             </button>
@@ -169,38 +176,44 @@ export default function EventCard({
       </div>
 
       {showRegistrations && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-hidden">
-            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Registered Participants</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-hidden">
+            <div className="p-3 sm:p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-base sm:text-lg font-semibold">
+                Registered Participants
+              </h3>
               <button
                 onClick={() => setShowRegistrations(false)}
                 className="p-1 hover:bg-gray-100 rounded-full"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
 
-            <div className="max-h-[400px] overflow-y-auto p-4">
+            <div className="max-h-[60vh] sm:max-h-[400px] overflow-y-auto p-3 sm:p-4">
               {registrations.length > 0 ? (
                 <div className="space-y-2">
                   {registrations.map((reg) => (
                     <div
                       key={reg.registrationid}
-                      className="flex justify-between items-center p-2 border-b"
+                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 border-b gap-1"
                     >
                       <div>
-                        <p className="font-medium">{reg.user_name}</p>
-                        <p className="text-sm text-gray-500">{reg.usertype}</p>
+                        <p className="font-medium text-sm sm:text-base">
+                          {reg.user_name}
+                        </p>
+                        <p className="text-xs sm:text-sm text-gray-500">
+                          {reg.usertype}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs sm:text-sm text-gray-500">
                         {new Date(reg.registration_date).toLocaleDateString()}
                       </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-gray-500 py-4">
+                <p className="text-center text-xs sm:text-sm text-gray-500 py-4">
                   No registrations yet
                 </p>
               )}
