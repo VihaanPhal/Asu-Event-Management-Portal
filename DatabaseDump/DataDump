@@ -1,0 +1,162 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.14 (Homebrew)
+-- Dumped by pg_dump version 16.4
+
+-- Started on 2024-12-06 23:07:06 MST
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 3693 (class 0 OID 16395)
+-- Dependencies: 212
+-- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: vihaanphal
+--
+
+COPY public."User" (userid, name, usertype) FROM stdin;
+1	Noah	Student
+2	Mishika	Faculty
+3	Vihaan	Student
+4	Rishi	Staff
+5	John	Student
+6	Vihaan Phal	Student
+\.
+
+
+--
+-- TOC entry 3695 (class 0 OID 16402)
+-- Dependencies: 214
+-- Data for Name: department; Type: TABLE DATA; Schema: public; Owner: vihaanphal
+--
+
+COPY public.department (departmentid, name) FROM stdin;
+1	Computer Science
+2	Engineering
+3	Business
+4	Arts
+\.
+
+
+--
+-- TOC entry 3691 (class 0 OID 16386)
+-- Dependencies: 210
+-- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: vihaanphal
+--
+
+COPY public.event (eventid, name, location, date, description, departmentid) FROM stdin;
+1	Tech Symposium	Main Auditorium	2024-11-15	Annual technology showcase	1
+2	Engineering Fair	Engineering Building	2024-10-20	Showcase of engineering projects	2
+3	Business Conference	Business School	2024-09-05	Networking event for business students	3
+4	Art Exhibition	Art Gallery	2024-12-01	Student art showcase	4
+5	Hackathon	Computer Lab	2024-11-30	24-hour coding competition	1
+7	vihaan	Tempe, AZ, USA	2024-12-03	hellosaasxasxax	1
+8	vihaan	Tempe, AZ, USA	2024-12-10	helloadadcsdacscdcd	1
+9	vihaan	Toronto, ON	2024-12-19	jdanfckjndfcjdnafck	2
+10	vihaan	Tempe, AZ, USA	2024-12-13	adkjbhcadjhbchjadbc	2
+11	World Cup	Tempe, AZ, USA	2024-12-07	world cup for soccer where teams from all over the world take part to compete against each other!	2
+\.
+
+
+--
+-- TOC entry 3699 (class 0 OID 16426)
+-- Dependencies: 218
+-- Data for Name: feedback; Type: TABLE DATA; Schema: public; Owner: vihaanphal
+--
+
+COPY public.feedback (feedbackid, userid, eventid, rating, comment, date) FROM stdin;
+1	1	1	5	Great event!	2024-11-16
+2	3	1	4	Informative sessions	2024-11-16
+3	2	2	5	Well organized	2024-10-21
+4	4	3	4	Good networking opportunity	2024-09-06
+5	5	4	5	Impressive artwork	2024-12-02
+\.
+
+
+--
+-- TOC entry 3697 (class 0 OID 16409)
+-- Dependencies: 216
+-- Data for Name: registration; Type: TABLE DATA; Schema: public; Owner: vihaanphal
+--
+
+COPY public.registration (registrationid, eventid, userid, date) FROM stdin;
+1	1	1	2024-11-01
+2	1	3	2024-11-02
+3	2	2	2024-10-15
+4	3	4	2024-08-30
+5	4	5	2024-11-25
+6	2	1	2024-12-06
+7	2	1	2024-12-06
+8	2	1	2024-12-06
+9	2	1	2024-12-06
+10	3	1	2024-12-06
+11	2	6	2024-12-07
+12	7	6	2024-12-07
+13	3	6	2024-12-07
+14	1	6	2024-12-07
+15	4	6	2024-12-07
+16	5	6	2024-12-07
+\.
+
+
+--
+-- TOC entry 3705 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: User_userid_seq; Type: SEQUENCE SET; Schema: public; Owner: vihaanphal
+--
+
+SELECT pg_catalog.setval('public."User_userid_seq"', 6, true);
+
+
+--
+-- TOC entry 3706 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: department_departmentid_seq; Type: SEQUENCE SET; Schema: public; Owner: vihaanphal
+--
+
+SELECT pg_catalog.setval('public.department_departmentid_seq', 4, true);
+
+
+--
+-- TOC entry 3707 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: event_eventid_seq; Type: SEQUENCE SET; Schema: public; Owner: vihaanphal
+--
+
+SELECT pg_catalog.setval('public.event_eventid_seq', 11, true);
+
+
+--
+-- TOC entry 3708 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: feedback_feedbackid_seq; Type: SEQUENCE SET; Schema: public; Owner: vihaanphal
+--
+
+SELECT pg_catalog.setval('public.feedback_feedbackid_seq', 5, true);
+
+
+--
+-- TOC entry 3709 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: registration_registrationid_seq; Type: SEQUENCE SET; Schema: public; Owner: vihaanphal
+--
+
+SELECT pg_catalog.setval('public.registration_registrationid_seq', 16, true);
+
+
+-- Completed on 2024-12-06 23:07:06 MST
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,7 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
 import { Cog, ThumbsUp, Zap, Rocket, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function SignInPage() {
   return (
@@ -69,7 +67,7 @@ export default function SignInPage() {
             />
           </div>
         </div>
-       </div>
+      </div>
     </div>
   );
 }
