@@ -5,9 +5,6 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { Search, Calendar, Bell } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
 const navItems = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Events", path: "/dashboard/events" },
@@ -30,6 +27,7 @@ export default function Header() {
               </span>
             </Link>
           </div>
+
           <nav className="hidden md:flex space-x-4">
             {navItems.map((item) => (
               <Link
@@ -45,19 +43,22 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+
           <div className="flex items-center space-x-4">
             <div className="relative hidden md:block">
-              <Input
+              <input
                 type="search"
                 placeholder="Search events..."
-                className="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="pl-10 pr-4 py-2 w-64 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             </div>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800" />
-            </Button>
+
+            <button className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+              <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800" />
+            </button>
+
             <UserButton
               appearance={{
                 elements: {
